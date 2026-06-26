@@ -25,22 +25,24 @@ OUTPUT_DIR = "data"
 
 def resolve_api_url(api_url: str) -> str | None:
     """Resolve an api-v2.soundcloud.com/tracks/{id} URL to a proper permalink."""
-    result = subprocess.run(
-        [
-            "yt-dlp",
-            "--flat-playlist",
-            "--print", "webpage_url",
-            "--no-warnings",
-            api_url,
-        ],
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    for line in result.stdout.strip().split("\n"):
-        line = line.strip()
-        if line and "soundcloud.com" in line and not line.startswith("https://api-v2"):
-            return line
+    for attempt in range(3):
+        result = subprocess.run(
+            [
+                "yt-dlp",
+                "--flat-playlist",
+                "--print", "webpage_url",
+                "--no-warnings",
+                api_url,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        for line in result.stdout.strip().split("\n"):
+            line = line.strip()
+            if line and "soundcloud.com" in line and not line.startswith("https://api-v2"):
+                return line
+        time.sleep(10)
     return None
 
 
@@ -82,7 +84,7 @@ def get_track_urls(playlist_url: str, retries: int = 3) -> list[str]:
                         clean_urls.append(resolved)
                     else:
                         clean_urls.append(api_url)  # keep as fallback
-                    time.sleep(1)
+                    time.sleep(5)
 
             if clean_urls:
                 return clean_urls
