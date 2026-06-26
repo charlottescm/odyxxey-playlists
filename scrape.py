@@ -120,15 +120,14 @@ def main():
         else:
             print(f"  ERROR: No tracks found for {name}")
             failed.append(name)
-        time.sleep(3)
+        time.sleep(30)
 
     print("\n=== Done ===")
     if failed:
         print(f"Failed playlists: {', '.join(failed)}")
-        sys.exit(1)
+        print("Partial success - saved what we could.")
     else:
         print("All playlists scraped successfully.")
-
 
 if __name__ == "__main__":
     main()
