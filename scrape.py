@@ -31,15 +31,15 @@ def get_track_urls(playlist_url: str, retries: int = 3) -> list[str]:
         result = subprocess.run(
             [
                 "yt-dlp",
-                "--flat-playlist",
-                "--print", "%(webpage_url)s",
+                "--no-flat-playlist",
+                "--print", "webpage_url",
                 "--no-warnings",
                 "--extractor-args", "soundcloud:formats=0",
                 playlist_url,
             ],
             capture_output=True,
             text=True,
-            timeout=120,
+            timeout=300,
         )
 
         if result.returncode == 0:
