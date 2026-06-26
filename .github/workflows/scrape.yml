@@ -31,4 +31,5 @@ jobs:
           git add data/
           # Only commit if there are changes
           git diff --cached --quiet || git commit -m "chore: update playlist CSVs $(date -u '+%Y-%m-%d')"
+          git pull --rebase origin main
           git push
